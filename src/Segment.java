@@ -35,6 +35,27 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
         }
     }
 
+    public Point getSecondLastEndPoint(){
+        Point result = segmentStartPoint;
+        if(segmentOrientationData == Direction.VERTICAL_UP){
+            result.setX(segmentEndPoint.getX());
+            result.setY(segmentEndPoint.getY() - 1);
+        }
+        else if(segmentOrientationData == Direction.VERTICAL_DOWN){
+            result.setX(segmentEndPoint.getX());
+            result.setY(segmentEndPoint.getY() + 1);
+        }
+        else if(segmentOrientationData == Direction.HORIZONTAL_RIGHT){
+            result.setX(segmentEndPoint.getX() - 1);
+            result.setY(segmentEndPoint.getY());
+        }
+        else if(segmentOrientationData == Direction.HORIZONTAL_LEFT){
+            result.setX(segmentEndPoint.getX() + 1);
+            result.setY(segmentEndPoint.getY());
+        }
+        return result;
+    }
+
     public boolean initSegmentEndPoint(Point point){ //FIRST INIT MOVE, DEFINES DIRECTIONS
         if(point != segmentStartPoint &&(segmentOrientationData == Direction.NO_DIRECTION && (point.getX() == segmentEndPoint.getX() || point.getY() == segmentEndPoint.getY()))){
                 if(point.getX() == segmentStartPoint.getX()){
