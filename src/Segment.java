@@ -1,10 +1,10 @@
-public class Segment {
+public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
     private Point segmentStartPoint;
     private Point segmentEndPoint;
 
     private int segmentOrientationData = Direction.NO_DIRECTION; //ORIENTATION, DIRECTION
 
-    public Segment(Point start){ //PRZY INICJALIZACJI NAJPIERW SEGMENT MA POCZATEK I KONIEC W SOBIE, POZNIEJ W MIARE ZWIEKSZANIA SPRAWDZAM CZY JEST OKI
+    public Segment(Point start){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
         segmentStartPoint = start;
         segmentEndPoint = start;
     }
@@ -31,8 +31,8 @@ public class Segment {
         }
     }
 
-    public boolean initSegmentEndPoint(Point point){ //INICJUJE KONIEC ENDPOINTU - ZAWSZE PIERWSZY
-        if(point.isPointValid() && point != segmentStartPoint){
+    public boolean initSegmentEndPoint(Point point){ //FIRST INIT MOVE, DEFINES DIRECTIONS
+        if(point != segmentStartPoint &&(segmentOrientationData == Direction.NO_DIRECTION && (point.getX() == segmentEndPoint.getX() || point.getY() == segmentEndPoint.getY()))){
                 if(point.getX() == segmentStartPoint.getX()){
                     if (point.getY() > segmentStartPoint.getY())
                         segmentOrientationData = Direction.VERTICAL_UP;
@@ -46,6 +46,27 @@ public class Segment {
                         segmentOrientationData = Direction.HORIZONTAL_LEFT;
                 }
                 return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean ifPointCanBeNewPartOfSegment(Point point){
+        if(segmentOrientationData == Direction.NO_DIRECTION && (point.getX() == segmentEndPoint.getX() ^ point.getY() == segmentEndPoint.getY())){ //XOR
+            return true;
+        }
+        else if(segmentOrientationData == Direction.VERTICAL_UP){
+            return point.getX() == segmentEndPoint.getX() && point.getY() > segmentEndPoint.getY();
+        }
+        else if(segmentOrientationData == Direction.VERTICAL_DOWN){
+            return point.getX() == segmentEndPoint.getX() && point.getY() < segmentEndPoint.getY();
+        }
+        else if(segmentOrientationData == Direction.HORIZONTAL_LEFT){
+            return point.getX() < segmentEndPoint.getX() && point.getY() == segmentEndPoint.getY();
+        }
+        else if(segmentOrientationData == Direction.HORIZONTAL_RIGHT){
+            return point.getX() > segmentEndPoint.getX() && point.getY() == segmentEndPoint.getY();
         }
         else{
             return false;
