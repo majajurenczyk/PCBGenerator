@@ -8,6 +8,7 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
     private int boardHeight; //PCB height
     private ArrayList<Point> boardDefinedPoints; //Available points
     private ArrayList<Connection> boardDefinedConnections; //Connections between points
+
     private Population boardSolutions = null; //every solution is individual
 
     public PCB(int width, int height, ArrayList<Point> points, ArrayList<Connection> connections){

@@ -7,6 +7,10 @@ public class Point {
         this.y = y;
     }
 
+    public boolean isPointValid(){
+        return this.x > 0 && this.y > 0;
+    }
+
     public int getY() {
         return y;
     }
@@ -22,6 +26,7 @@ public class Point {
     public void setX(int x) {
         this.x = x;
     }
+
 
     @Override
     public boolean equals(Object obj) {
