@@ -7,9 +7,10 @@ public class Point {
         this.y = y;
     }
 
-    public boolean isPointValid(){
-        return this.x > 0 && this.y > 0;
+    public double countDistanceToAnotherPoint(Point anotherPoint){
+        return Math.sqrt((anotherPoint.y - this.y)*(anotherPoint.y - this.y) + (anotherPoint.x - this.x)*(anotherPoint.x - this.x));
     }
+
 
     public int getY() {
         return y;

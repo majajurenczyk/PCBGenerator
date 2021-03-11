@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Path {
@@ -11,15 +13,14 @@ public class Path {
 
     public Path(Connection connection, Individual individual){
         segmentsInPath = new ArrayList<>();
-
         pathStartPoint = connection.getFirstPoint();
         pathEndPoint = connection.getSecondPoint();
-
         pathsIndividual = individual;
     }
 
-    public boolean randomInitPath(){ //HERE WILL BE GENERATED SEGMENTS IN PATH
+    public void randomInitPath(){ //HERE WILL BE GENERATED SEGMENTS IN PATH
         Random rand = new Random();
+
         Point actStartPoint = pathStartPoint;
         Segment actSegment = new Segment(actStartPoint, this);
 
@@ -31,19 +32,23 @@ public class Path {
 
         while(actSegment.getSegmentEndPoint() != pathEndPoint){
             availableMoves = getAllPointsToMoveFromPoint(actSegment.getSegmentEndPoint(), actSegment.getSecondLastEndPoint());
-            randomMove = availableMoves.get(rand.nextInt(availableMoves.size()));
-            if(actSegment.ifPointCanBeNewPartOfSegment(randomMove)){
-                actSegment.enlargeSegment();
+            if(availableMoves.size() == 0){
+                segmentsInPath.clear();
+                randomInitPath(); //IF THERE IS NO MOVE NEW PATH IS GENERATED
             }
-            else{
-                actSegment = new Segment(actSegment.getSegmentEndPoint(), this);
-                actSegment.initSegmentEndPoint(randomMove);
-                segmentsInPath.add(actSegment);
+            else {
+                int [] moves_probabilities = getProbabilitiesForMoves(availableMoves);
+                randomMove = availableMoves.get(chooseMoveIndex(moves_probabilities));
+                if (actSegment.ifPointCanBeNewPartOfSegment(randomMove)) {
+                    actSegment.enlargeSegment();
+                } else {
+                    actSegment = new Segment(actSegment.getSegmentEndPoint(), this);
+                    actSegment.initSegmentEndPoint(randomMove);
+                    segmentsInPath.add(actSegment);
+                }
             }
         }
-        return true;
     }
-
 
     private ArrayList<Point> getAllPointsToMoveFromPoint(Point actStartPoint, Point beforePoint){
         ArrayList<Point> result = new ArrayList<>();
@@ -57,17 +62,52 @@ public class Path {
                 result.add(p);
                 return result;
             }
-            if(p != beforePoint){
+            if(p != beforePoint && !isPointInPath(p)){
                 result.add(p);
             }
         }
         return  result;
     }
 
-
-    public boolean isPathFullyCreated(){
-        return segmentsInPath.get(segmentsInPath.size() - 1).getSegmentEndPoint() == pathEndPoint;
+    private int [] getProbabilitiesForMoves(ArrayList<Point> moves){
+        ArrayList<Double> distances = new ArrayList<>();
+        ArrayList<Double> distances_sorted = new ArrayList<>();
+        int [] probabilities = new int[moves.size()];
+        for (Point p: moves) {
+            distances.add(p.countDistanceToAnotherPoint(pathEndPoint)*100);
+            distances_sorted.add(p.countDistanceToAnotherPoint(pathEndPoint)*100);
+        }
+        distances_sorted.sort(Double::compareTo);
+        for (int i = 0; i < moves.size(); i++){
+            probabilities[i] = distances_sorted.lastIndexOf(distances.get(i));
+        }
+        return probabilities;
     }
+
+    private int chooseMoveIndex(int [] probabilities){
+        Random ran = new Random();
+        int [] results = new int [probabilities.length];
+        for (int i = 0; i < probabilities.length; i++){
+            results [i] = ran.nextInt(100*probabilities[i]);
+        }
+        int max = 0;
+        for (int result : results) {
+            if (result > max) {
+                max = result;
+            }
+        }
+        return max;
+    }
+
+
+    private boolean isPointInPath(Point p){
+        for (Segment s: segmentsInPath){
+            if (s.isPointOnSegment(p))
+                return true;
+        }
+        return false;
+    }
+
 
     //GETTERS AND SETTERS
 
@@ -97,5 +137,16 @@ public class Path {
 
     public Individual getPathsIndividual() {
         return pathsIndividual;
+    }
+
+    //FROM OBJECT
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder("PATH = \n");
+        for (Segment s: segmentsInPath) {
+            result.append(s.toString()).append("\n");
+        }
+        return result.toString();
     }
 }

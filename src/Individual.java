@@ -13,6 +13,7 @@ public class Individual {
     public void randomInitIndividual(){
         for(int i = 0; i < pathsOnBoard.length; i++){
             pathsOnBoard[i] = new Path(individualsPopulation.getProblem().getBoardDefinedConnections().get(i), this);
+            pathsOnBoard[i].randomInitPath();
         }
     }
 
@@ -28,5 +29,14 @@ public class Individual {
 
     public Population getIndividualsPopulation() {
         return individualsPopulation;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder("INDIVIDUAL: ");
+        for (Path p: pathsOnBoard) {
+            result.append("\t").append(p.toString()).append("\n");
+        }
+        return result.toString();
     }
 }

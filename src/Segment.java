@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
     private Point segmentStartPoint;
     private Point segmentEndPoint;
@@ -98,6 +100,29 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
         }
     }
 
+    public boolean isPointOnSegment(Point p){
+        if(p == segmentEndPoint || p == segmentStartPoint){
+            return true;
+        }
+        else{
+            if(segmentOrientationData == Direction.VERTICAL_UP){
+                return p.getX() == segmentStartPoint.getX() && (p.getY() > segmentStartPoint.getY() && p.getY() < segmentEndPoint.getY());
+            }
+            else if(segmentOrientationData == Direction.VERTICAL_DOWN){
+                return p.getX() == segmentStartPoint.getX() && (p.getY() < segmentStartPoint.getY() && p.getY() > segmentEndPoint.getY());
+            }
+            else if(segmentOrientationData == Direction.HORIZONTAL_RIGHT){
+                return p.getY() == segmentStartPoint.getY() && (p.getX() > segmentStartPoint.getY() && p.getX() < segmentEndPoint.getY());
+            }
+            else if(segmentOrientationData == Direction.HORIZONTAL_LEFT){
+                return p.getY() == segmentStartPoint.getY() && (p.getX() < segmentStartPoint.getY() && p.getX() > segmentEndPoint.getY());
+            }
+            else
+                return false;
+        }
+    }
+
+
     //GETTERS AND SETTERS
 
     public Path getSegmentsPath() {
@@ -114,5 +139,13 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
 
     public int getSegmentOrientationData(){
         return segmentOrientationData;
+    }
+
+    //FROM OBJECT
+
+
+    @Override
+    public String toString() {
+        return "[" + segmentStartPoint.toString() + " , " + segmentEndPoint.toString() + "]";
     }
 }

@@ -26,4 +26,13 @@ public class Population {
     public PCB getProblem() {
         return problem;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder("POPULATION: ");
+        for (Individual p: individualsInPopulation) {
+            result.append("\t").append(p.toString()).append("\n");
+        }
+        return result.toString();
+    }
 }
