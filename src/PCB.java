@@ -9,7 +9,7 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
     private ArrayList<Point> boardDefinedPoints; //Available points
     private ArrayList<Connection> boardDefinedConnections; //Connections between points
 
-    private Population boardSolutions = null; //every solution is individual
+    private Population boardSolutionsPopulation = null; //every solution is individual
 
     public PCB(int width, int height, ArrayList<Point> points, ArrayList<Connection> connections){
         this.boardWidth = width;
@@ -24,6 +24,21 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
     }
 
     //METHODS
+
+    public void printPCB(){
+        initPopulation(); //?????????????????????????????XD
+    }
+
+    public void initPopulation(){
+        if(boardSolutionsPopulation == null){
+            boardSolutionsPopulation = new Population(AlgorithmConfiguration.populationSize, this);
+            boardSolutionsPopulation.randomInitPopulation();
+        }
+        else{
+            boardSolutionsPopulation.randomInitPopulation();
+        }
+    }
+
     public boolean readAndSetPCBParamsFromFile(String filePath) {
         if (!isPathValid(filePath))
                 return false;
@@ -111,13 +126,6 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
         return p.getX() <= this.boardWidth && p.getY() <= this.boardHeight && p.getX() >= 0 && p.getY() >= 0;
     }
 
-    public void printPCB(){
-
-    }
-
-    public void initPopulation(){
-
-    }
     //OVERRIDE FROM OBJECT
 
 
@@ -164,7 +172,7 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
 
     public static void main(String[] args) {
         PCB pcb = new PCB();
-        pcb.readAndSetPCBParamsFromFile("C:\\Users\\User\\Desktop\\3rok\\6sem\\SI\\L\\lab1\\PCBGenerator\\src\\zad0.txt");
+        boolean res = pcb.readAndSetPCBParamsFromFile("C:\\Users\\User\\Desktop\\3rok\\6sem\\SI\\L\\lab1\\PCBGenerator\\src\\zad0.txt");
         System.out.println(pcb);
     }
 }

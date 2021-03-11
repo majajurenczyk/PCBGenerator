@@ -4,9 +4,13 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
 
     private int segmentOrientationData = Direction.NO_DIRECTION; //ORIENTATION, DIRECTION
 
-    public Segment(Point start){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
+    private Path segmentsPath;
+
+    public Segment(Point start, Path segmentsPath){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
         segmentStartPoint = start;
         segmentEndPoint = start;
+
+        this.segmentsPath = segmentsPath;
     }
 
     public boolean enlargeSegment(){
@@ -71,5 +75,23 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
         else{
             return false;
         }
+    }
+
+    //GETTERS AND SETTERS
+
+    public Path getSegmentsPath() {
+        return segmentsPath;
+    }
+
+    public Point getSegmentEndPoint() {
+        return segmentEndPoint;
+    }
+
+    public Point getSegmentStartPoint(){
+        return segmentStartPoint;
+    }
+
+    public int getSegmentOrientationData(){
+        return segmentOrientationData;
     }
 }

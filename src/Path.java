@@ -6,14 +6,26 @@ public class Path {
     private Point pathStartPoint;
     private Point pathEndPoint;
 
-    public Path(Connection connection){
+    private Individual pathsIndividual; //solution that path belongs to
+
+    public Path(Connection connection, Individual individual){
         segmentsInPath = new ArrayList<>();
 
         pathStartPoint = connection.getFirstPoint();
         pathEndPoint = connection.getSecondPoint();
+
+        pathsIndividual = individual;
     }
 
+    public boolean randomInitPath(){ //HERE WILL BE GENERATED SEGMENTS IN PATH
+        Point actStartPoint = pathStartPoint;
+        Segment initSegment = new Segment(actStartPoint, this);
+        return true;
+    }
 
+    public boolean isPathFullyCreated(){
+        return segmentsInPath.get(segmentsInPath.size() - 1).getSegmentEndPoint() == pathEndPoint;
+    }
 
 
     //GETTERS AND SETTERS
@@ -40,5 +52,9 @@ public class Path {
 
     public void setSegmentsInPath(ArrayList<Segment> segmentsInPath) {
         this.segmentsInPath = segmentsInPath;
+    }
+
+    public Individual getPathsIndividual() {
+        return pathsIndividual;
     }
 }
