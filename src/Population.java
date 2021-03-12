@@ -5,20 +5,19 @@ public class Population {
     private Individual [] individualsInPopulation;
     private PCB problem;
 
-    public Population(int populationSize, PCB problem){ //Population is an array of list of individuals which are solutions
+    Population(int populationSize, PCB problem){ //Population is an array of list of individuals which are solutions
         individualsInPopulation = new Individual[populationSize];
         this.problem = problem;
     }
 
-    public void randomInitPopulation(){
+    void randomInitPopulation(){
         for(int i = 0; i < individualsInPopulation.length; i++){
-            System.out.println("TUTAJ SIE ROBI INYWIDUAL: " + i);
             individualsInPopulation[i] = new Individual(this);
             individualsInPopulation[i].randomInitIndividual();
         }
     }
 
-    public ArrayList<Integer> getFitnessForAllSolutions(){
+    ArrayList<Integer> getFitnessForAllSolutions(){
         ArrayList<Integer> results = new ArrayList<>();
         for (Individual i: individualsInPopulation) {
             results.add(i.individualFitness());
@@ -27,21 +26,18 @@ public class Population {
     }
 
     //GETTERS AND SETTERS
-    public Individual[] getSolution() {
+    public Individual[] getIndividualsInPopulation() {
         return individualsInPopulation;
     }
 
-    public void individualsInPopulation(Individual[] population) {
-        this.individualsInPopulation = population;
-    }
-
-    public PCB getProblem() {
+    PCB getProblem() {
         return problem;
     }
 
+    //OVERRIDE FROM OBJECT
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder("POPULATION: ");
+        StringBuilder result = new StringBuilder("\nPOPULATION: ");
         for (Individual p: individualsInPopulation) {
             result.append("\t").append(p.toString()).append("\n");
         }

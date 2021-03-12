@@ -6,19 +6,19 @@ public class Individual {
     private Path [] pathsOnBoard; //individual - solution is array of paths between connections on board
     private Population individualsPopulation;
 
-    public Individual(Population population){
-        pathsOnBoard = new Path [population.getProblem().getBoardDefinedConnections().size()];
+    Individual(Population population){
+        pathsOnBoard = new Path [population.getProblem().getBoardDefinedConnections().size()]; //ARRAY OF PATHS (LIKE ONE SOLVED PCB)
         individualsPopulation = population;
     }
 
-    public void randomInitIndividual(){
+    void randomInitIndividual(){
         for(int i = 0; i < pathsOnBoard.length; i++){
             pathsOnBoard[i] = new Path(individualsPopulation.getProblem().getBoardDefinedConnections().get(i), this);
             pathsOnBoard[i].randomInitPath();
         }
     }
 
-    public int individualFitness(){
+    int individualFitness(){
         return AlgorithmConfiguration.punishmentForPathsLength*getAllPathsLength() +
                 AlgorithmConfiguration.punishmentForNumberOfSegments*getAllPathsNumberOfSegments() +
                 AlgorithmConfiguration.punishmentForNumberOfPathsOutOfBoard*getNumberOfPathsOutOfBoard() +
@@ -26,7 +26,7 @@ public class Individual {
                 AlgorithmConfiguration.punishmentForIntersects*getAllIntersects();
     }
 
-    public int getAllPathsLength(){
+    private int getAllPathsLength(){
         int sum = 0;
         for (Path p: pathsOnBoard) {
             sum += p.getPathLength();
@@ -34,7 +34,7 @@ public class Individual {
         return sum;
     }
 
-    public int getNumberOfPathsOutOfBoard(){
+    private int getNumberOfPathsOutOfBoard(){
         int sum = 0;
         for (Path p: pathsOnBoard) {
             if(p.isOutOfBoard()){
@@ -44,8 +44,7 @@ public class Individual {
         return sum;
     }
 
-
-    public int getAllPathsOutOfBoardLength(){
+    private int getAllPathsOutOfBoardLength(){
         int sum = 0;
         for (Path p: pathsOnBoard) {
             sum += p.getPathLengthOutOfBoard();
@@ -54,7 +53,7 @@ public class Individual {
     }
 
 
-    public int getAllPathsNumberOfSegments(){
+    private int getAllPathsNumberOfSegments(){
         int sum = 0;
         for (Path p: pathsOnBoard) {
             sum += p.getNumberOfSegments();
@@ -62,11 +61,11 @@ public class Individual {
         return sum;
     }
 
-    public int getAllIntersects(){
+    private int getAllIntersects(){
        ArrayList<Point> allPointsFromPaths = new ArrayList<>();
        ArrayList<Point> pointsWithoutDuplicates = new ArrayList<>();
         for (Path p: pathsOnBoard) {
-            allPointsFromPaths.addAll(p.getAllPointsOnPath());
+            allPointsFromPaths.addAll(p.getAllPointsOnPath()); //SUM EVERY POINT ON PCB
         }
 
         for(Point pFromAll : allPointsFromPaths){
@@ -81,7 +80,7 @@ public class Individual {
                 pointsWithoutDuplicates.add(pFromAll);
             }
         }
-        return allPointsFromPaths.size() - pointsWithoutDuplicates.size();
+        return allPointsFromPaths.size() - pointsWithoutDuplicates.size(); //NUMBER OF INTERSECTS IS NUMBER OF DUPLICATES IN ALL POINTS
     }
 
     //GETTERS AND SETTERS
@@ -93,13 +92,14 @@ public class Individual {
         this.pathsOnBoard = pathsOnBoard;
     }
 
-    public Population getIndividualsPopulation() {
+    Population getIndividualsPopulation() {
         return individualsPopulation;
     }
 
+    //OVERRIDE FROM OBJECT
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder("INDIVIDUAL: ");
+        StringBuilder result = new StringBuilder("\nINDIVIDUAL: ");
         for (Path p: pathsOnBoard) {
             result.append("\t").append(p.toString()).append("\n");
         }

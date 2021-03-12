@@ -2,12 +2,12 @@ public class Connection {
     private Point firstPoint;
     private Point secondPoint;
 
-    public Connection(Point firstPoint, Point secondPoint){
+    Connection(Point firstPoint, Point secondPoint){
         this.firstPoint = firstPoint;
         this.secondPoint = secondPoint;
     }
 
-    public Point getSecondPoint() {
+    Point getSecondPoint() {
         return secondPoint;
     }
 
@@ -15,7 +15,7 @@ public class Connection {
         this.secondPoint = secondPoint;
     }
 
-    public Point getFirstPoint() {
+    Point getFirstPoint() {
         return firstPoint;
     }
 

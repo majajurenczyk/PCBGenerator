@@ -25,10 +25,9 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
 
     //METHODS
 
-
-    public void initPopulation(int populationSize){
+    private void initPopulation(){
         if(boardSolutionsPopulation == null){
-            boardSolutionsPopulation = new Population(populationSize, this);
+            boardSolutionsPopulation = new Population(AlgorithmConfiguration.populationSize, this);
             boardSolutionsPopulation.randomInitPopulation();
         }
         else{
@@ -36,7 +35,7 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
         }
     }
 
-    public boolean readAndSetPCBParamsFromFile(String filePath) {
+    private boolean readAndSetPCBParamsFromFile(String filePath) {
         if (!isPathValid(filePath))
                 return false;
         try {
@@ -96,9 +95,55 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
         }
     }
 
-    public boolean validatePCB(){
-        return validatePointsOnBoard() && validateConnectionsOnBoard();
+    //OVERRIDE FROM OBJECT
+
+    @Override
+    public String toString() {
+        return "width: " + this.boardWidth + "\n"+
+                "height: " + this.boardHeight + "\n"+
+                "points: " + this.boardDefinedPoints + "\n"+
+                "connections: " + this.boardDefinedConnections;
     }
+
+    //GETTER AND SETTERS
+
+    int getBoardWidth() {
+        return boardWidth;
+    }
+
+    private void setBoardWidth(int boardWidth) {
+        this.boardWidth = boardWidth;
+    }
+
+    int getBoardHeight() {
+        return boardHeight;
+    }
+
+    private void setBoardHeight(int boardHeight) {
+        this.boardHeight = boardHeight;
+    }
+
+    public ArrayList<Point> getBoardDefinedPoints() {
+        return boardDefinedPoints;
+    }
+
+    public void setBoardDefinedPoints(ArrayList<Point> boardDefinedPoints) {
+        this.boardDefinedPoints = boardDefinedPoints;
+    }
+
+    ArrayList<Connection> getBoardDefinedConnections() {
+        return boardDefinedConnections;
+    }
+
+    public void setBoardDefinedConnections(ArrayList<Connection> boardDefinedConnections) {
+        this.boardDefinedConnections = boardDefinedConnections;
+    }
+
+    private Population getBoardSolutionsPopulation(){
+        return boardSolutionsPopulation;
+    }
+
+    //ADDITIONALLY
 
     private boolean validatePointsOnBoard(){
         for (Point p : this.boardDefinedPoints) {
@@ -123,53 +168,8 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
         return p.getX() <= this.boardWidth && p.getY() <= this.boardHeight && p.getX() >= 0 && p.getY() >= 0;
     }
 
-    //OVERRIDE FROM OBJECT
+    //===================================================================================================================='
 
-
-    @Override
-    public String toString() {
-        return "width: " + this.boardWidth + "\n"+
-                "height: " + this.boardHeight + "\n"+
-                "points: " + this.boardDefinedPoints + "\n"+
-                "connections: " + this.boardDefinedConnections;
-    }
-
-    //GETTER AND SETTERS
-    public int getBoardWidth() {
-        return boardWidth;
-    }
-
-    public void setBoardWidth(int boardWidth) {
-        this.boardWidth = boardWidth;
-    }
-
-    public int getBoardHeight() {
-        return boardHeight;
-    }
-
-    public void setBoardHeight(int boardHeight) {
-        this.boardHeight = boardHeight;
-    }
-
-    public ArrayList<Point> getBoardDefinedPoints() {
-        return boardDefinedPoints;
-    }
-
-    public void setBoardDefinedPoints(ArrayList<Point> boardDefinedPoints) {
-        this.boardDefinedPoints = boardDefinedPoints;
-    }
-
-    public ArrayList<Connection> getBoardDefinedConnections() {
-        return boardDefinedConnections;
-    }
-
-    public void setBoardDefinedConnections(ArrayList<Connection> boardDefinedConnections) {
-        this.boardDefinedConnections = boardDefinedConnections;
-    }
-
-    public Population getBoardSolutionsPopulation(){
-        return boardSolutionsPopulation;
-    }
 
     public static void main(String[] args) {
         PCB pcb = new PCB();
@@ -178,10 +178,9 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
 
         System.out.println("========================================");
 
-        pcb.initPopulation(1);
+        pcb.initPopulation();
 
         System.out.println(pcb.getBoardSolutionsPopulation().toString());
-
         System.out.println(pcb.getBoardSolutionsPopulation().getFitnessForAllSolutions());
     }
 }
