@@ -1,5 +1,5 @@
 class AlgorithmConfiguration {
-    static int populationSize = 1;
+    static int populationSize = 1000;
 
     //PUNISHMENTS
     static int punishmentForNumberOfSegments = 2;

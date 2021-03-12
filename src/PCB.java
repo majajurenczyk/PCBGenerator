@@ -9,7 +9,7 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
     private ArrayList<Point> boardDefinedPoints; //Available points
     private ArrayList<Connection> boardDefinedConnections; //Connections between points
 
-    private Population boardSolutionsPopulation = null; //every solution is individual
+    //private Population boardSolutionsPopulation = null; //every solution is individual
 
     public PCB(int width, int height, ArrayList<Point> points, ArrayList<Connection> connections){
         this.boardWidth = width;
@@ -24,15 +24,10 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
     }
 
     //METHODS
-
-    private void initPopulation(){
-        if(boardSolutionsPopulation == null){
-            boardSolutionsPopulation = new Population(AlgorithmConfiguration.populationSize, this);
-            boardSolutionsPopulation.randomInitPopulation();
-        }
-        else{
-            boardSolutionsPopulation.randomInitPopulation();
-        }
+    private Population initPopulation(){
+        Population boardSolutionsPopulation = new Population(AlgorithmConfiguration.populationSize, this);
+        boardSolutionsPopulation.randomInitPopulation();
+        return boardSolutionsPopulation;
     }
 
     private boolean readAndSetPCBParamsFromFile(String filePath) {
@@ -139,10 +134,6 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
         this.boardDefinedConnections = boardDefinedConnections;
     }
 
-    private Population getBoardSolutionsPopulation(){
-        return boardSolutionsPopulation;
-    }
-
     //ADDITIONALLY
 
     private boolean validatePointsOnBoard(){
@@ -173,14 +164,14 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
 
     public static void main(String[] args) {
         PCB pcb = new PCB();
-        boolean res = pcb.readAndSetPCBParamsFromFile("C:\\Users\\User\\Desktop\\3rok\\6sem\\SI\\L\\lab1\\PCBGenerator\\src\\zad3.txt");
+        boolean res = pcb.readAndSetPCBParamsFromFile("C:\\Users\\User\\Desktop\\3rok\\6sem\\SI\\L\\lab1\\PCBGenerator\\src\\zad0.txt");
         System.out.println(pcb);
 
         System.out.println("========================================");
 
-        pcb.initPopulation();
+        Population pop = pcb.initPopulation();
 
-        System.out.println(pcb.getBoardSolutionsPopulation().toString());
-        System.out.println(pcb.getBoardSolutionsPopulation().getFitnessForAllSolutions());
+        System.out.println(pop.toString());
+        System.out.println(pop.getFitnessForAllSolutions());
     }
 }
