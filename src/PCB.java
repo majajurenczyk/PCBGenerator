@@ -25,13 +25,10 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
 
     //METHODS
 
-    public void printPCB(){
-        initPopulation(); //?????????????????????????????XD
-    }
 
-    public void initPopulation(){
+    public void initPopulation(int populationSize){
         if(boardSolutionsPopulation == null){
-            boardSolutionsPopulation = new Population(AlgorithmConfiguration.populationSize, this);
+            boardSolutionsPopulation = new Population(populationSize, this);
             boardSolutionsPopulation.randomInitPopulation();
         }
         else{
@@ -170,9 +167,21 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
         this.boardDefinedConnections = boardDefinedConnections;
     }
 
+    public Population getBoardSolutionsPopulation(){
+        return boardSolutionsPopulation;
+    }
+
     public static void main(String[] args) {
         PCB pcb = new PCB();
-        boolean res = pcb.readAndSetPCBParamsFromFile("C:\\Users\\User\\Desktop\\3rok\\6sem\\SI\\L\\lab1\\PCBGenerator\\src\\zad0.txt");
+        boolean res = pcb.readAndSetPCBParamsFromFile("C:\\Users\\User\\Desktop\\3rok\\6sem\\SI\\L\\lab1\\PCBGenerator\\src\\zad3.txt");
         System.out.println(pcb);
+
+        System.out.println("========================================");
+
+        pcb.initPopulation(1);
+
+        System.out.println(pcb.getBoardSolutionsPopulation().toString());
+
+        System.out.println(pcb.getBoardSolutionsPopulation().getFitnessForAllSolutions());
     }
 }

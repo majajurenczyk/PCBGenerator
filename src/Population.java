@@ -1,3 +1,6 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class Population {
     private Individual [] individualsInPopulation;
     private PCB problem;
@@ -9,9 +12,18 @@ public class Population {
 
     public void randomInitPopulation(){
         for(int i = 0; i < individualsInPopulation.length; i++){
+            System.out.println("TUTAJ SIE ROBI INYWIDUAL: " + i);
             individualsInPopulation[i] = new Individual(this);
             individualsInPopulation[i].randomInitIndividual();
         }
+    }
+
+    public ArrayList<Integer> getFitnessForAllSolutions(){
+        ArrayList<Integer> results = new ArrayList<>();
+        for (Individual i: individualsInPopulation) {
+            results.add(i.individualFitness());
+        }
+        return results;
     }
 
     //GETTERS AND SETTERS

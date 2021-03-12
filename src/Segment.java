@@ -9,36 +9,66 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
     private Path segmentsPath;
 
     public Segment(Point start, Path segmentsPath){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
-        segmentStartPoint = start;
-        segmentEndPoint = start;
+        segmentStartPoint = new Point(start.getX(), start.getY());
+        segmentEndPoint = new Point(start.getX(), start.getY());
 
         this.segmentsPath = segmentsPath;
     }
 
-    public boolean enlargeSegment(){
-        if(segmentOrientationData == Direction.VERTICAL_UP){
-            segmentEndPoint = new Point(segmentEndPoint.getX(), segmentEndPoint.getY()+1);
-            return true;
+
+    public int getSegmentLength(){
+        if(segmentOrientationData == Direction.NO_DIRECTION){
+            return 0;
         }
-        else if(segmentOrientationData == Direction.VERTICAL_DOWN){
-            segmentEndPoint = new Point(segmentEndPoint.getX(), segmentEndPoint.getY()-1);
-            return true;
-        }
-        else if(segmentOrientationData == Direction.HORIZONTAL_RIGHT){
-            segmentEndPoint = new Point(segmentEndPoint.getX()+1, segmentEndPoint.getY());
-            return true;
-        }
-        else if(segmentOrientationData == Direction.HORIZONTAL_LEFT){
-            segmentEndPoint = new Point(segmentEndPoint.getX()-1, segmentEndPoint.getY());
-            return true;
-        }
-        else {
-            return false;
-        }
+        return (int)segmentStartPoint.countDistanceToAnotherPoint(segmentEndPoint);
     }
 
+
+    private boolean isPointOnBoard(Point p, int height, int width){
+        return p.getX() <= width && p.getY() <= height && p.getX() >= 0 && p.getY() >= 0;
+    }
+
+    public int getOutOfBoardSegmentLength(){
+        int width = segmentsPath.getPathsIndividual().getIndividualsPopulation().getProblem().getBoardWidth();
+        int height = segmentsPath.getPathsIndividual().getIndividualsPopulation().getProblem().getBoardHeight();
+
+        int numberOfPointsOnBoard = 0;
+
+        if(segmentOrientationData == Direction.VERTICAL_UP){
+            for(int i = segmentStartPoint.getY(); i <= segmentEndPoint.getY(); i++){
+                if(isPointOnBoard(new Point(segmentStartPoint.getX(), i), height, width)){
+                    numberOfPointsOnBoard++;
+                }
+            }
+        }
+        else if(segmentOrientationData == Direction.VERTICAL_DOWN){
+            for(int i = segmentStartPoint.getY(); i >= segmentEndPoint.getY(); i--){
+                if(isPointOnBoard(new Point(segmentStartPoint.getX(), i), height, width)){
+                    numberOfPointsOnBoard++;
+                }
+            }
+        }
+        else if(segmentOrientationData == Direction.HORIZONTAL_RIGHT){
+            for(int i = segmentStartPoint.getX(); i <= segmentEndPoint.getX(); i++){
+                if(isPointOnBoard(new Point(i, segmentStartPoint.getY()), height, width)){
+                    numberOfPointsOnBoard++;
+                }
+            }
+        }
+        else if(segmentOrientationData == Direction.HORIZONTAL_LEFT){
+            for(int i = segmentStartPoint.getX(); i >= segmentEndPoint.getX(); i--){
+                if(isPointOnBoard(new Point(i, segmentStartPoint.getY()), height, width)){
+                    numberOfPointsOnBoard++;
+                }
+            }
+        }
+
+        return getSegmentLength() - (numberOfPointsOnBoard-1);
+    }
+
+
     public Point getSecondLastEndPoint(){
-        Point result = segmentStartPoint;
+        Point result = new Point(segmentStartPoint.getX(), segmentStartPoint.getY());
         if(segmentOrientationData == Direction.VERTICAL_UP){
             result.setX(segmentEndPoint.getX());
             result.setY(segmentEndPoint.getY() - 1);
@@ -59,7 +89,7 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
     }
 
     public boolean initSegmentEndPoint(Point point){ //FIRST INIT MOVE, DEFINES DIRECTIONS
-        if(point != segmentStartPoint &&(segmentOrientationData == Direction.NO_DIRECTION && (point.getX() == segmentEndPoint.getX() || point.getY() == segmentEndPoint.getY()))){
+        if(!point.equals(segmentStartPoint) && segmentOrientationData == Direction.NO_DIRECTION && (point.getX() == segmentEndPoint.getX() || point.getY() == segmentEndPoint.getY())){
                 if(point.getX() == segmentStartPoint.getX()){
                     if (point.getY() > segmentStartPoint.getY())
                         segmentOrientationData = Direction.VERTICAL_UP;
@@ -72,6 +102,7 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
                     else
                         segmentOrientationData = Direction.HORIZONTAL_LEFT;
                 }
+                segmentEndPoint = new Point(point.getX(), point.getY());
                 return true;
         }
         else{
@@ -100,26 +131,56 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
         }
     }
 
-    public boolean isPointOnSegment(Point p){
-        if(p == segmentEndPoint || p == segmentStartPoint){
+
+    public boolean enlargeSegment(){
+        if(segmentOrientationData == Direction.VERTICAL_UP){
+            segmentEndPoint = new Point(segmentEndPoint.getX(), segmentEndPoint.getY()+1);
             return true;
         }
-        else{
-            if(segmentOrientationData == Direction.VERTICAL_UP){
-                return p.getX() == segmentStartPoint.getX() && (p.getY() > segmentStartPoint.getY() && p.getY() < segmentEndPoint.getY());
-            }
-            else if(segmentOrientationData == Direction.VERTICAL_DOWN){
-                return p.getX() == segmentStartPoint.getX() && (p.getY() < segmentStartPoint.getY() && p.getY() > segmentEndPoint.getY());
-            }
-            else if(segmentOrientationData == Direction.HORIZONTAL_RIGHT){
-                return p.getY() == segmentStartPoint.getY() && (p.getX() > segmentStartPoint.getY() && p.getX() < segmentEndPoint.getY());
-            }
-            else if(segmentOrientationData == Direction.HORIZONTAL_LEFT){
-                return p.getY() == segmentStartPoint.getY() && (p.getX() < segmentStartPoint.getY() && p.getX() > segmentEndPoint.getY());
-            }
-            else
-                return false;
+        else if(segmentOrientationData == Direction.VERTICAL_DOWN){
+            segmentEndPoint = new Point(segmentEndPoint.getX(), segmentEndPoint.getY()-1);
+            return true;
         }
+        else if(segmentOrientationData == Direction.HORIZONTAL_RIGHT){
+            segmentEndPoint = new Point(segmentEndPoint.getX()+1, segmentEndPoint.getY());
+            return true;
+        }
+        else if(segmentOrientationData == Direction.HORIZONTAL_LEFT){
+            segmentEndPoint = new Point(segmentEndPoint.getX()-1, segmentEndPoint.getY());
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public ArrayList<Point> getListOfPointsOnSegment(){
+        int width = segmentsPath.getPathsIndividual().getIndividualsPopulation().getProblem().getBoardWidth();
+        int height = segmentsPath.getPathsIndividual().getIndividualsPopulation().getProblem().getBoardHeight();
+
+        ArrayList<Point> listOfPoints = new ArrayList<>();
+
+        if(segmentOrientationData == Direction.VERTICAL_UP){
+            for(int i = segmentStartPoint.getY(); i <= segmentEndPoint.getY(); i++){
+                listOfPoints.add(new Point(segmentStartPoint.getX(), i));
+            }
+        }
+        else if(segmentOrientationData == Direction.VERTICAL_DOWN){
+            for(int i = segmentStartPoint.getY(); i >= segmentEndPoint.getY(); i--){
+                listOfPoints.add(new Point(segmentStartPoint.getX(), i));
+            }
+        }
+        else if(segmentOrientationData == Direction.HORIZONTAL_RIGHT){
+            for(int i = segmentStartPoint.getX(); i <= segmentEndPoint.getX(); i++){
+                listOfPoints.add(new Point(i, segmentStartPoint.getY()));
+            }
+        }
+        else if(segmentOrientationData == Direction.HORIZONTAL_LEFT){
+            for(int i = segmentStartPoint.getX(); i >= segmentEndPoint.getX(); i--){
+                listOfPoints.add(new Point(i, segmentStartPoint.getY()));
+            }
+        }
+        return listOfPoints;
     }
 
 
