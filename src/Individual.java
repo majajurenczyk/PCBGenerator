@@ -6,6 +6,8 @@ public class Individual {
     private Path [] pathsOnBoard; //individual - solution is array of paths between connections on board
     private Population individualsPopulation;
 
+    private double individualFitInPopulation = 0;
+
     Individual(Population population){
         pathsOnBoard = new Path [population.getProblem().getBoardDefinedConnections().size()]; //ARRAY OF PATHS (LIKE ONE SOLVED PCB)
         individualsPopulation = population;
@@ -18,13 +20,28 @@ public class Individual {
         }
     }
 
-    int individualFitness(){
+    int individualPunishment(){ //sum of punishments with their weighs
         return AlgorithmConfiguration.punishmentForPathsLength*getAllPathsLength() +
                 AlgorithmConfiguration.punishmentForNumberOfSegments*getAllPathsNumberOfSegments() +
                 AlgorithmConfiguration.punishmentForNumberOfPathsOutOfBoard*getNumberOfPathsOutOfBoard() +
                 AlgorithmConfiguration.punishmentForPathsLengthOutOfBoard*getAllPathsOutOfBoardLength() +
                 AlgorithmConfiguration.punishmentForIntersects*getAllIntersects();
     }
+
+    //////////////////////
+
+    double countIndividualFitInPopulation(int minPunishInPopulation){ //counts fitness for individual based on smallest individual punishment
+        return (double)minPunishInPopulation/(double)individualPunishment();
+    }
+
+    void setIndividualFitInPopulation(double individualFitInPopulation){ //it sets individuals fitness
+        this.individualFitInPopulation = individualFitInPopulation;
+    }
+
+    double getIndividualFit(){ //gets individual fitness
+        return individualFitInPopulation;
+    }
+    //////////////////////
 
     private int getAllPathsLength(){
         int sum = 0;

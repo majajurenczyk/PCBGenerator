@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Population {
@@ -15,15 +14,31 @@ public class Population {
             individualsInPopulation[i] = new Individual(this);
             individualsInPopulation[i].randomInitIndividual();
         }
+
+        setFitnessForAllSolutions(); //after generating population is counted fitness in population for each individual.
     }
 
-    ArrayList<Integer> getFitnessForAllSolutions(){
-        ArrayList<Integer> results = new ArrayList<>();
+    private void setFitnessForAllSolutions(){
+        ArrayList<Integer> punishments = new ArrayList<>();
         for (Individual i: individualsInPopulation) {
-            results.add(i.individualFitness());
+            punishments.add(i.individualPunishment());
         }
-        return results;
+        punishments.sort(Double::compare);
+
+        for (Individual i: individualsInPopulation){
+            i.setIndividualFitInPopulation(punishments.get(0));
+        }
     }
+
+    ArrayList<Double> getFitnessForAllSolutions(){
+        ArrayList<Double> result = new ArrayList<>();
+        for (Individual i: individualsInPopulation) {
+            result.add(i.getIndividualFit());
+        }
+        return result;
+    }
+
+
 
     //GETTERS AND SETTERS
     public Individual[] getIndividualsInPopulation() {

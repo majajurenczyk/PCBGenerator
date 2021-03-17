@@ -164,7 +164,7 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
 
     public static void main(String[] args) {
         PCB pcb = new PCB();
-        boolean res = pcb.readAndSetPCBParamsFromFile("C:\\Users\\User\\Desktop\\3rok\\6sem\\SI\\L\\lab1\\PCBGenerator\\src\\zad0.txt");
+        boolean res = pcb.readAndSetPCBParamsFromFile("C:\\Users\\User\\Desktop\\3rok\\6sem\\SI\\L\\lab1\\PCBGenerator\\src\\zad3.txt");
         System.out.println(pcb);
 
         System.out.println("========================================");
