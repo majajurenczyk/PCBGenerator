@@ -20,6 +20,7 @@ public class GeneticOperators {
         return drawnIndividuals.get(drawnIndividuals.size()-1).deepCopyIndividual(null);
     }
 
+    //ROULETTE
     public static Individual selectionOperatorRoulette(Population population) {
         Random rand = new Random();
         double [] weights = countPropsOfBeingDrawn(population.getFitnessForAllSolutions());
@@ -56,7 +57,7 @@ public class GeneticOperators {
 
     //=================CROSSING==================//
 
-    private static Individual crossing(Individual firstParent, Individual secondParent){
+    public static Individual crossing(Individual firstParent, Individual secondParent){
         Random rand = new Random();
 
         Individual child = firstParent.deepCopyIndividual(null);
@@ -64,8 +65,7 @@ public class GeneticOperators {
         if(crossingChance > AlgorithmConfiguration.crossingProbability)
             return child;
 
-        int numberOfGenotypeChanges = rand.nextInt(firstParent.getPathsOnBoard().length - 2)+1; // [1, size-1] <- at least one gene crossing
-
+        int numberOfGenotypeChanges = rand.nextInt(firstParent.getPathsOnBoard().length-1)+1; // [1, size-1] <- at least one gene crossing
         int changesCounter = 0;
         int indexToChange = rand.nextInt(firstParent.getPathsOnBoard().length);
         ArrayList<Integer> changedIndexes = new ArrayList<>();

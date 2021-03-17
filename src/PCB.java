@@ -173,10 +173,20 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
         System.out.println("========================================");
 
         Population pop = pcb.initPopulation();
-        Population pop1 = new Population(AlgorithmConfiguration.populationSize, pcb);
+        //Population pop1 = new Population(AlgorithmConfiguration.populationSize, pcb);
 
-        System.out.println(pop.toString());
-        System.out.println(pop.getFitnessForAllSolutions());
-        System.out.println((GeneticOperators.selectionOperatorTournament(pop)).toString());
+        //System.out.println(pop.toString());
+        //System.out.println(pop.getFitnessForAllSolutions());
+
+        Individual ind1 = GeneticOperators.selectionOperatorTournament(pop);
+        Individual ind2 = GeneticOperators.selectionOperatorTournament(pop);
+
+        System.out.println(ind1.toString());
+        System.out.println(ind2.toString());
+
+        if(ind1 != ind2){
+            Individual result = GeneticOperators.crossing(ind1, ind2);
+            System.out.println(result.toString());
+        }
     }
 }
