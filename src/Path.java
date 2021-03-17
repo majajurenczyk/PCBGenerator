@@ -8,14 +8,30 @@ public class Path {
 
     private Individual pathsIndividual; //solution that path belongs to
 
-    Path(Connection connection, Individual individual) {
+    public Path(Connection connection, Individual individual) {
         segmentsInPath = new ArrayList<>();
         pathStartPoint = connection.getFirstPoint();
         pathEndPoint = connection.getSecondPoint();
         pathsIndividual = individual;
     }
 
-    int getNumberOfSegments(){
+    public Path(Point start, Point end, ArrayList<Segment> segments, Individual individual) {
+        segmentsInPath = segments;
+        pathStartPoint = start;
+        pathEndPoint = end;
+        pathsIndividual = individual;
+    }
+
+    public Path deepCopyPath(Individual individual){
+        ArrayList<Segment> segmentsInPath = new ArrayList<>();
+        Path result = new Path(this.pathStartPoint, this.pathEndPoint, segmentsInPath, individual);
+        for (Segment s: this.segmentsInPath){
+            result.segmentsInPath.add(s.deepCopySegment(result));
+        }
+        return result;
+    }
+
+    public int getNumberOfSegments(){
         return segmentsInPath.size();
     }
 

@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class Population {
     private Individual [] individualsInPopulation;
@@ -26,18 +29,17 @@ public class Population {
         punishments.sort(Double::compare);
 
         for (Individual i: individualsInPopulation){
-            i.setIndividualFitInPopulation(punishments.get(0));
+            i.setIndividualFitInPopulation(i.countIndividualFitInPopulation(punishments.get(0)));
         }
     }
 
-    ArrayList<Double> getFitnessForAllSolutions(){
+    public ArrayList<Double> getFitnessForAllSolutions(){
         ArrayList<Double> result = new ArrayList<>();
         for (Individual i: individualsInPopulation) {
             result.add(i.getIndividualFit());
         }
         return result;
     }
-
 
 
     //GETTERS AND SETTERS

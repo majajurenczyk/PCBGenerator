@@ -8,11 +8,29 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
 
     private Path segmentsPath;
 
-    Segment(Point start, Path segmentsPath){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
+    public Segment(Point start, Path segmentsPath){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
         segmentStartPoint = new Point(start.getX(), start.getY());
         segmentEndPoint = new Point(start.getX(), start.getY());
 
         this.segmentsPath = segmentsPath;
+    }
+
+    public void setPathForSegment(Path p){
+        segmentsPath = p;
+    }
+
+    public Segment(Point start, Point end, int orientation, Path segmentsPath){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
+        segmentStartPoint = new Point(start.getX(), start.getY());
+        segmentEndPoint = new Point(end.getX(), end.getY());
+        segmentOrientationData = orientation;
+        this.segmentsPath = segmentsPath;
+    }
+
+    public Segment deepCopySegment(Path segmentsPath){
+        return new Segment(new Point(this.segmentStartPoint.getX(), this.segmentStartPoint.getY()),
+                            new Point(this.segmentEndPoint.getX(), this.segmentEndPoint.getY()),
+                            segmentOrientationData,
+                            segmentsPath);
     }
 
     void initSegmentEndPoint(Point point){ //CHANGING ENDPOINT, DEFINES DIRECTIONS

@@ -2,6 +2,8 @@ import java.io.*;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Random;
 
 public class PCB { //PCB is problem instance < - > we are trying to find best solution for defined board
     private int boardWidth; //PCB width
@@ -9,7 +11,6 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
     private ArrayList<Point> boardDefinedPoints; //Available points
     private ArrayList<Connection> boardDefinedConnections; //Connections between points
 
-    //private Population boardSolutionsPopulation = null; //every solution is individual
 
     public PCB(int width, int height, ArrayList<Point> points, ArrayList<Connection> connections){
         this.boardWidth = width;
@@ -23,13 +24,15 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
         boardDefinedConnections = new ArrayList<>();
     }
 
-    //METHODS
+    //OPERATORS
     private Population initPopulation(){
         Population boardSolutionsPopulation = new Population(AlgorithmConfiguration.populationSize, this);
         boardSolutionsPopulation.randomInitPopulation();
         return boardSolutionsPopulation;
     }
 
+
+    //METHODS
     private boolean readAndSetPCBParamsFromFile(String filePath) {
         if (!isPathValid(filePath))
                 return false;
@@ -164,14 +167,16 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
 
     public static void main(String[] args) {
         PCB pcb = new PCB();
-        boolean res = pcb.readAndSetPCBParamsFromFile("C:\\Users\\User\\Desktop\\3rok\\6sem\\SI\\L\\lab1\\PCBGenerator\\src\\zad3.txt");
+        boolean res = pcb.readAndSetPCBParamsFromFile("C:\\Users\\User\\Desktop\\3rok\\6sem\\SI\\L\\lab1\\PCBGenerator\\src\\zad0.txt");
         System.out.println(pcb);
 
         System.out.println("========================================");
 
         Population pop = pcb.initPopulation();
+        Population pop1 = new Population(AlgorithmConfiguration.populationSize, pcb);
 
         System.out.println(pop.toString());
         System.out.println(pop.getFitnessForAllSolutions());
+        System.out.println((GeneticOperators.selectionOperatorTournament(pop)).toString());
     }
 }
