@@ -1,4 +1,7 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
 
 public class GeneticOperators {
@@ -16,8 +19,8 @@ public class GeneticOperators {
             drawnIndividuals.add(population.getIndividualsInPopulation()[drawnIndex]);
             counter++;
         }
-        drawnIndividuals.sort((Individual i1, Individual i2) -> Double.compare(i1.getIndividualFit(), i2.getIndividualFit()));
-        return drawnIndividuals.get(drawnIndividuals.size()-1).deepCopyIndividual(null);
+        drawnIndividuals.sort(Comparator.comparingInt((Individual i) -> population.getFitnessForAllSolutions()[population.getIndexOfIndividual(i)]));
+        return drawnIndividuals.get(drawnIndividuals.size()-1).deepCopyIndividual();
     }
 
     //ROULETTE
@@ -37,14 +40,17 @@ public class GeneticOperators {
                 resultIndex = i;
         }
         if(resultIndex != -1) {
-            return population.getIndividualsInPopulation()[resultIndex].deepCopyIndividual(null);
+            return population.getIndividualsInPopulation()[resultIndex].deepCopyIndividual();
         }
         else
             return null;
     }
 
 
-    private static double [] countPropsOfBeingDrawn(ArrayList<Double> fitnessValues){
+    private static double [] countPropsOfBeingDrawn(int [] fitValues){
+        ArrayList<Integer> fitnessValues = new ArrayList<>();
+        for (int i: fitValues) fitnessValues.add(i);
+
         double [] weights = new double [fitnessValues.size()];
         double sum = fitnessValues.stream()
                 .mapToDouble(d -> d)
@@ -60,7 +66,7 @@ public class GeneticOperators {
     public static Individual crossing(Individual firstParent, Individual secondParent){
         Random rand = new Random();
 
-        Individual child = firstParent.deepCopyIndividual(null);
+        Individual child = firstParent.deepCopyIndividual();
         int crossingChance = rand.nextInt(101);
         if(crossingChance > AlgorithmConfiguration.crossingProbability)
             return child;
@@ -74,7 +80,7 @@ public class GeneticOperators {
                indexToChange = rand.nextInt(firstParent.getPathsOnBoard().length);
            }
            changedIndexes.add(indexToChange);
-           child.getPathsOnBoard()[indexToChange] = secondParent.getPathsOnBoard()[indexToChange].deepCopyPath(child);
+           child.getPathsOnBoard()[indexToChange] = secondParent.getPathsOnBoard()[indexToChange].deepCopyPath();
            changesCounter++;
         }
         return child;

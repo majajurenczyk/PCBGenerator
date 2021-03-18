@@ -26,8 +26,8 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
 
     //OPERATORS
     private Population initPopulation(){
-        Population boardSolutionsPopulation = new Population(AlgorithmConfiguration.populationSize, this);
-        boardSolutionsPopulation.randomInitPopulation();
+        Population boardSolutionsPopulation = new Population(AlgorithmConfiguration.populationSize);
+        boardSolutionsPopulation.randomInitPopulation(this);
         return boardSolutionsPopulation;
     }
 

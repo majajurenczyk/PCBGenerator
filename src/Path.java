@@ -6,27 +6,23 @@ public class Path {
     private Point pathStartPoint;
     private Point pathEndPoint;
 
-    private Individual pathsIndividual; //solution that path belongs to
-
-    public Path(Connection connection, Individual individual) {
+    public Path(Connection connection) {
         segmentsInPath = new ArrayList<>();
         pathStartPoint = connection.getFirstPoint();
         pathEndPoint = connection.getSecondPoint();
-        pathsIndividual = individual;
     }
 
-    public Path(Point start, Point end, ArrayList<Segment> segments, Individual individual) {
+    public Path(Point start, Point end, ArrayList<Segment> segments) {
         segmentsInPath = segments;
         pathStartPoint = start;
         pathEndPoint = end;
-        pathsIndividual = individual;
     }
 
-    public Path deepCopyPath(Individual individual){
+    public Path deepCopyPath(){
         ArrayList<Segment> segmentsInPath = new ArrayList<>();
-        Path result = new Path(this.pathStartPoint, this.pathEndPoint, segmentsInPath, individual);
+        Path result = new Path(this.pathStartPoint, this.pathEndPoint, segmentsInPath);
         for (Segment s: this.segmentsInPath){
-            result.segmentsInPath.add(s.deepCopySegment(result));
+            result.segmentsInPath.add(s.deepCopySegment());
         }
         return result;
     }
@@ -35,8 +31,8 @@ public class Path {
         return segmentsInPath.size();
     }
 
-    boolean isOutOfBoard(){
-        return getPathLengthOutOfBoard() > 0;
+    boolean isOutOfBoard(int width, int height){
+        return getPathLengthOutOfBoard(width, height) > 0;
     }
 
     int getPathLength(){
@@ -47,10 +43,10 @@ public class Path {
         return sum;
     }
 
-    int getPathLengthOutOfBoard(){
+    int getPathLengthOutOfBoard(int width, int height){
         int sum = 0;
         for (Segment s: segmentsInPath) {
-            sum += s.getOutOfBoardSegmentLength();
+            sum += s.getOutOfBoardSegmentLength(width, height);
         }
         return sum;
     }
@@ -186,11 +182,8 @@ public class Path {
         this.segmentsInPath = segmentsInPath;
     }
 
-    Individual getPathsIndividual() {
-        return pathsIndividual;
-    }
 
-    //OVERRIDED FROM OBJECT
+    //OVERRIDE FROM OBJECT
 
     @Override
     public String toString() {

@@ -6,31 +6,21 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
 
     private int segmentOrientationData = Direction.NO_DIRECTION; //ORIENTATION, DIRECTION
 
-    private Path segmentsPath;
-
     public Segment(Point start, Path segmentsPath){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
         segmentStartPoint = new Point(start.getX(), start.getY());
         segmentEndPoint = new Point(start.getX(), start.getY());
-
-        this.segmentsPath = segmentsPath;
     }
 
-    public void setPathForSegment(Path p){
-        segmentsPath = p;
-    }
-
-    public Segment(Point start, Point end, int orientation, Path segmentsPath){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
+    public Segment(Point start, Point end, int orientation /*, Path segmentsPath*/){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
         segmentStartPoint = new Point(start.getX(), start.getY());
         segmentEndPoint = new Point(end.getX(), end.getY());
         segmentOrientationData = orientation;
-        this.segmentsPath = segmentsPath;
     }
 
-    public Segment deepCopySegment(Path segmentsPath){
+    public Segment deepCopySegment(){
         return new Segment(new Point(this.segmentStartPoint.getX(), this.segmentStartPoint.getY()),
                             new Point(this.segmentEndPoint.getX(), this.segmentEndPoint.getY()),
-                            segmentOrientationData,
-                            segmentsPath);
+                            segmentOrientationData);
     }
 
     void initSegmentEndPoint(Point point){ //CHANGING ENDPOINT, DEFINES DIRECTIONS
@@ -80,10 +70,7 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
         return (int)segmentStartPoint.countDistanceToAnotherPoint(segmentEndPoint);
     }
 
-    int getOutOfBoardSegmentLength(){ //LENGTH OF SEGMENT OUT OF BOARD
-        int width = segmentsPath.getPathsIndividual().getIndividualsPopulation().getProblem().getBoardWidth();
-        int height = segmentsPath.getPathsIndividual().getIndividualsPopulation().getProblem().getBoardHeight();
-
+    int getOutOfBoardSegmentLength(int width, int height){ //LENGTH OF SEGMENT OUT OF BOARD
         int numberOfPointsOnBoard = 0;
 
         if(segmentOrientationData == Direction.VERTICAL_UP){
@@ -171,10 +158,6 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
     }
 
     //GETTERS AND SETTERS
-
-    public Path getSegmentsPath() {
-        return segmentsPath;
-    }
 
     Point getSegmentEndPoint() {
         return segmentEndPoint;

@@ -4,58 +4,53 @@ import java.util.ArrayList;
 
 public class Individual implements Comparable {
     private Path [] pathsOnBoard; //individual - solution is array of paths between connections on board
-    private Population individualsPopulation;
+    private PCB problem;
 
-    private double individualFitInPopulation = 0;
+    private int individualFitness;
 
-    public Individual(Population population){
-        pathsOnBoard = new Path [population.getProblem().getBoardDefinedConnections().size()]; //ARRAY OF PATHS (LIKE ONE SOLVED PCB)
-        individualsPopulation = population;
+    public Individual(PCB pcb){
+        pathsOnBoard = new Path [pcb.getBoardDefinedConnections().size()]; //ARRAY OF PATHS (LIKE ONE SOLVED PCB)
+        problem = pcb;
     }
 
-    public Individual(Population population, Path [] pathsOnBoard){
+    public Individual(Path [] pathsOnBoard, PCB pcb){
         this.pathsOnBoard = pathsOnBoard;
-        individualsPopulation = population;
+        this.problem = pcb;
     }
 
     public void randomInitIndividual(){
         for(int i = 0; i < pathsOnBoard.length; i++){
-            pathsOnBoard[i] = new Path(individualsPopulation.getProblem().getBoardDefinedConnections().get(i), this);
+            pathsOnBoard[i] = new Path(problem.getBoardDefinedConnections().get(i)/*, this*/);
             pathsOnBoard[i].randomInitPath();
         }
+
+        setIndividualFitness(countIndividualFitness());
     }
 
-    public Individual deepCopyIndividual(Population population){
+    public Individual deepCopyIndividual(){
         Path [] newPaths = new Path[pathsOnBoard.length];
-        Individual result = new Individual(population, newPaths);
+        Individual result = new Individual(newPaths, this.problem);
         for (int i = 0; i < pathsOnBoard.length; i++){
-            result.pathsOnBoard[i] = pathsOnBoard[i].deepCopyPath(result);
+            result.pathsOnBoard[i] = pathsOnBoard[i].deepCopyPath();
         }
         return result;
     }
 
-    public int individualPunishment(){ //sum of punishments with their weighs
+    public int countIndividualFitness(){ //sum of punishments with their weighs
         return AlgorithmConfiguration.punishmentForPathsLength*getAllPathsLength() +
                 AlgorithmConfiguration.punishmentForNumberOfSegments*getAllPathsNumberOfSegments() +
-                AlgorithmConfiguration.punishmentForNumberOfPathsOutOfBoard*getNumberOfPathsOutOfBoard() +
-                AlgorithmConfiguration.punishmentForPathsLengthOutOfBoard*getAllPathsOutOfBoardLength() +
+                AlgorithmConfiguration.punishmentForNumberOfPathsOutOfBoard*getNumberOfPathsOutOfBoard(problem) +
+                AlgorithmConfiguration.punishmentForPathsLengthOutOfBoard*getAllPathsOutOfBoardLength(problem) +
                 AlgorithmConfiguration.punishmentForIntersects*getAllIntersects();
     }
 
-    //////////////////////
-
-    double countIndividualFitInPopulation(int minPunishInPopulation){ //counts fitness for individual based on smallest individual punishment
-        return (int)(((double)minPunishInPopulation/(double)individualPunishment())*10000);
+    public void setIndividualFitness(int individualFitness){
+        this.individualFitness = individualFitness;
     }
 
-    void setIndividualFitInPopulation(double individualFitInPopulation){ //it sets individuals fitness
-        this.individualFitInPopulation = individualFitInPopulation;
+    public int getIndividualFitness(){
+        return individualFitness;
     }
-
-    double getIndividualFit(){ //gets individual fitness
-        return individualFitInPopulation;
-    }
-    //////////////////////
 
     private int getAllPathsLength(){
         int sum = 0;
@@ -65,20 +60,20 @@ public class Individual implements Comparable {
         return sum;
     }
 
-    private int getNumberOfPathsOutOfBoard(){
+    private int getNumberOfPathsOutOfBoard(PCB problem){
         int sum = 0;
         for (Path p: pathsOnBoard) {
-            if(p.isOutOfBoard()){
+            if(p.isOutOfBoard(problem.getBoardWidth(), problem.getBoardHeight())){
                 sum++;
             }
         }
         return sum;
     }
 
-    private int getAllPathsOutOfBoardLength(){
+    private int getAllPathsOutOfBoardLength(PCB problem){
         int sum = 0;
         for (Path p: pathsOnBoard) {
-            sum += p.getPathLengthOutOfBoard();
+            sum += p.getPathLengthOutOfBoard(problem.getBoardWidth(), problem.getBoardHeight());
         }
         return sum;
     }
@@ -123,14 +118,6 @@ public class Individual implements Comparable {
         this.pathsOnBoard = pathsOnBoard;
     }
 
-    public Population getIndividualsPopulation() {
-        return individualsPopulation;
-    }
-
-    public void setIndividualsPopulation(Population population){
-        this.individualsPopulation = population;
-    }
-
     //OVERRIDE FROM OBJECT
     @Override
     public String toString() {
@@ -143,7 +130,7 @@ public class Individual implements Comparable {
 
 
     @Override
-    public int compareTo(Object o) {
-        return Double.compare(this.individualFitInPopulation, ((Individual) o).individualFitInPopulation);
+    public int compareTo(Object o) { //INDIVIDUALS WITH LOWER FITNESS ARE BETTER
+        return -1 * Double.compare(this.individualFitness, ((Individual) o).individualFitness);
     }
 }

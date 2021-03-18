@@ -5,50 +5,49 @@ import java.util.Random;
 
 public class Population {
     private Individual [] individualsInPopulation;
-    private PCB problem;
+    private int []  fitnessInPopulation;
 
-    Population(int populationSize, PCB problem){ //Population is an array of list of individuals which are solutions
+    Population(int populationSize){ //Population is an array of list of individuals which are solutions
         individualsInPopulation = new Individual[populationSize];
-        this.problem = problem;
+        fitnessInPopulation = new int[populationSize];
     }
 
-    void randomInitPopulation(){
+    void randomInitPopulation(PCB problem){
         for(int i = 0; i < individualsInPopulation.length; i++){
-            individualsInPopulation[i] = new Individual(this);
+            individualsInPopulation[i] = new Individual(problem);
             individualsInPopulation[i].randomInitIndividual();
         }
-
         setFitnessForAllSolutions(); //after generating population is counted fitness in population for each individual.
+    }
+
+    public int getIndexOfIndividual(Individual ind){
+        for(int i = 0; i < individualsInPopulation.length; i++){
+            if(ind == individualsInPopulation[i])
+                return i;
+        }
+        return -1;
     }
 
     private void setFitnessForAllSolutions(){
         ArrayList<Integer> punishments = new ArrayList<>();
         for (Individual i: individualsInPopulation) {
-            punishments.add(i.individualPunishment());
+            punishments.add(i.countIndividualFitness());
         }
         punishments.sort(Double::compare);
 
-        for (Individual i: individualsInPopulation){
-            i.setIndividualFitInPopulation(i.countIndividualFitInPopulation(punishments.get(0)));
+        for(int i = 0; i < individualsInPopulation.length; i++){
+            fitnessInPopulation[i] = (int)(((double)punishments.get(0)/(double)(individualsInPopulation[i].getIndividualFitness()))*10000);
         }
     }
 
-    public ArrayList<Double> getFitnessForAllSolutions(){
-        ArrayList<Double> result = new ArrayList<>();
-        for (Individual i: individualsInPopulation) {
-            result.add(i.getIndividualFit());
-        }
-        return result;
+    public int [] getFitnessForAllSolutions(){
+        return fitnessInPopulation;
     }
 
 
     //GETTERS AND SETTERS
     public Individual[] getIndividualsInPopulation() {
         return individualsInPopulation;
-    }
-
-    PCB getProblem() {
-        return problem;
     }
 
     //OVERRIDE FROM OBJECT
