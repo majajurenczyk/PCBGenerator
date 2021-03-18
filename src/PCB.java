@@ -38,23 +38,26 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
         Population initial = initPopulation();
         populations.add(initial);
 
+        Population actPop = initial;
         for(int i = 0; i < AlgorithmConfiguration.numberOfPopulations; i++){
             Population nextPopulation = new Population(AlgorithmConfiguration.populationSize);
             int counter = 0;
             while(counter != AlgorithmConfiguration.populationSize){
-                Individual firstParent = GeneticOperators.selectionOperatorTournament(populations.get(populations.size()-1));
-                Individual secondParent = GeneticOperators.selectionOperatorTournament(populations.get(populations.size()-1));
-                while(firstParent == secondParent){
-                    secondParent = GeneticOperators.selectionOperatorTournament(populations.get(populations.size()-1));
-                }
-                nextPopulation.getIndividualsInPopulation()[counter] = GeneticOperators.crossing(firstParent, secondParent);
-                counter ++;
+                Individual firstParent = GeneticOperators.selectionOperatorTournament(actPop);
+                Individual secondParent = GeneticOperators.selectionOperatorTournament(actPop);
+                /*while(firstParent == secondParent){
+                    secondParent = GeneticOperators.selectionOperatorTournament(actPop);
+                }*/
+                Individual child = GeneticOperators.crossing(firstParent, secondParent);
+                child = GeneticOperators.mutationRand(child, firstParent);
+                nextPopulation.getIndividualsInPopulation()[counter] = child;
+                counter++;
             }
             nextPopulation.setFitnessForAllSolutions();
-            populations.add(nextPopulation);
+            actPop = nextPopulation;
         }
-        Arrays.sort(populations.get(populations.size()-1).getIndividualsInPopulation(), Individual::compareTo);
-        return (populations.get(populations.size() -1).getIndividualsInPopulation())[AlgorithmConfiguration.populationSize - 1];
+        Arrays.sort(actPop.getIndividualsInPopulation(), Individual::compareTo);
+        return (actPop.getIndividualsInPopulation())[AlgorithmConfiguration.populationSize - 1];
     }
 
 

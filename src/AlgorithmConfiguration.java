@@ -1,6 +1,6 @@
 class AlgorithmConfiguration {
-    static int populationSize = 100;
-    static int numberOfPopulations = 10000;
+    static int populationSize = 10;
+    static int numberOfPopulations = 10;
 
     //PUNISHMENTS
     static int punishmentForNumberOfSegments = 5;

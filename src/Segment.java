@@ -165,6 +165,17 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
         return segmentStartPoint;
     }
 
+    int getSegmentOrientationData(){
+        return segmentOrientationData;
+    }
+
+    void setSegmentEndPoint(Point p){
+        segmentEndPoint = p;
+    }
+    void setSegmentStartPoint(Point p){
+        segmentStartPoint = p;
+    }
+
     //FROM OBJECT
 
 
