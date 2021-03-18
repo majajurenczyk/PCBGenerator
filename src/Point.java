@@ -7,6 +7,10 @@ public class Point {
         this.y = y;
     }
 
+    public Point deepCopy(){
+        return new Point(this.x, this.y);
+    }
+
     double countDistanceToAnotherPoint(Point anotherPoint){
         return Math.sqrt((anotherPoint.y - this.y)*(anotherPoint.y - this.y) + (anotherPoint.x - this.x)*(anotherPoint.x - this.x));
     }

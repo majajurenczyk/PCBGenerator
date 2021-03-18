@@ -8,19 +8,19 @@ public class Path {
 
     public Path(Connection connection) {
         segmentsInPath = new ArrayList<>();
-        pathStartPoint = connection.getFirstPoint();
-        pathEndPoint = connection.getSecondPoint();
+        pathStartPoint = connection.getFirstPoint().deepCopy();
+        pathEndPoint = connection.getSecondPoint().deepCopy();
     }
 
     public Path(Point start, Point end, ArrayList<Segment> segments) {
         segmentsInPath = segments;
-        pathStartPoint = start;
-        pathEndPoint = end;
+        pathStartPoint = start.deepCopy();
+        pathEndPoint = end.deepCopy();
     }
 
     public Path deepCopyPath(){
         ArrayList<Segment> segmentsInPath = new ArrayList<>();
-        Path result = new Path(this.pathStartPoint, this.pathEndPoint, segmentsInPath);
+        Path result = new Path(pathStartPoint.deepCopy(), this.pathEndPoint.deepCopy(), segmentsInPath);
         for (Segment s: this.segmentsInPath){
             result.segmentsInPath.add(s.deepCopySegment());
         }
@@ -100,7 +100,7 @@ public class Path {
                 result.add(p);
                 return result;
             }
-            if (!p.equals(beforePoint) && !isPointInPath(p)) { //IF MOVE IS COMING BACK OR INTERSECT WITH ITSELF - NOT VALID MOVE
+            if (/*!p.equals(beforePoint) && */!isPointInPath(p)) { //IF MOVE IS COMING BACK OR INTERSECT WITH ITSELF - NOT VALID MOVE
                 result.add(p);
             }
         }
@@ -138,7 +138,6 @@ public class Path {
         }
         return max_index;
     }
-
 
     private boolean isPointInPath(Point point) {
         for (Point p : getAllPointsOnPath()) {

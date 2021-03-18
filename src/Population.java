@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Population {
     private Individual [] individualsInPopulation;
-    private int []  fitnessInPopulation;
+    private int [] fitnessInPopulation;
 
     Population(int populationSize){ //Population is an array of list of individuals which are solutions
         individualsInPopulation = new Individual[populationSize];
@@ -28,7 +28,7 @@ public class Population {
         return -1;
     }
 
-    private void setFitnessForAllSolutions(){
+    public void setFitnessForAllSolutions(){
         ArrayList<Integer> punishments = new ArrayList<>();
         for (Individual i: individualsInPopulation) {
             punishments.add(i.countIndividualFitness());

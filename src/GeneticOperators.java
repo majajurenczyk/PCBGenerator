@@ -14,10 +14,14 @@ public class GeneticOperators {
         int counter = 0;
         int drawnIndex = -1;
         ArrayList<Individual> drawnIndividuals = new ArrayList<>();
-        while(counter != AlgorithmConfiguration.tournamentN || counter < population.getIndividualsInPopulation().length){
+        ArrayList<Integer> drawnIndexes = new ArrayList<>();
+        while(counter != AlgorithmConfiguration.tournamentN){
             drawnIndex = rand.nextInt(population.getIndividualsInPopulation().length);
-            drawnIndividuals.add(population.getIndividualsInPopulation()[drawnIndex]);
-            counter++;
+            if(!drawnIndexes.contains(drawnIndex)) {
+                drawnIndividuals.add(population.getIndividualsInPopulation()[drawnIndex]);
+                drawnIndexes.add(drawnIndex);
+                counter++;
+            }
         }
         drawnIndividuals.sort(Comparator.comparingInt((Individual i) -> population.getFitnessForAllSolutions()[population.getIndexOfIndividual(i)]));
         return drawnIndividuals.get(drawnIndividuals.size()-1).deepCopyIndividual();

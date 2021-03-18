@@ -7,20 +7,18 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
     private int segmentOrientationData = Direction.NO_DIRECTION; //ORIENTATION, DIRECTION
 
     public Segment(Point start, Path segmentsPath){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
-        segmentStartPoint = new Point(start.getX(), start.getY());
-        segmentEndPoint = new Point(start.getX(), start.getY());
+        segmentStartPoint = start.deepCopy();
+        segmentEndPoint = start.deepCopy();
     }
 
     public Segment(Point start, Point end, int orientation /*, Path segmentsPath*/){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
-        segmentStartPoint = new Point(start.getX(), start.getY());
-        segmentEndPoint = new Point(end.getX(), end.getY());
+        segmentStartPoint = start.deepCopy();
+        segmentEndPoint = end.deepCopy();
         segmentOrientationData = orientation;
     }
 
-    public Segment deepCopySegment(){
-        return new Segment(new Point(this.segmentStartPoint.getX(), this.segmentStartPoint.getY()),
-                            new Point(this.segmentEndPoint.getX(), this.segmentEndPoint.getY()),
-                            segmentOrientationData);
+    public Segment deepCopySegment() {
+        return new Segment(segmentStartPoint.deepCopy(), segmentEndPoint.deepCopy(), segmentOrientationData);
     }
 
     void initSegmentEndPoint(Point point){ //CHANGING ENDPOINT, DEFINES DIRECTIONS
@@ -37,7 +35,7 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
                 else
                     segmentOrientationData = Direction.HORIZONTAL_LEFT;
             }
-            segmentEndPoint = new Point(point.getX(), point.getY());
+            segmentEndPoint = point.deepCopy();
         }
     }
 
@@ -165,10 +163,6 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
 
     Point getSegmentStartPoint(){
         return segmentStartPoint;
-    }
-
-    public int getSegmentOrientationData(){
-        return segmentOrientationData;
     }
 
     //FROM OBJECT

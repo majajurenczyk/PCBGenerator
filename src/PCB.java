@@ -1,9 +1,7 @@
 import java.io.*;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class PCB { //PCB is problem instance < - > we are trying to find best solution for defined board
     private int boardWidth; //PCB width
@@ -11,24 +9,52 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
     private ArrayList<Point> boardDefinedPoints; //Available points
     private ArrayList<Connection> boardDefinedConnections; //Connections between points
 
+    private ArrayList<Population> populations;
+
 
     public PCB(int width, int height, ArrayList<Point> points, ArrayList<Connection> connections){
         this.boardWidth = width;
         this.boardHeight = height;
         this.boardDefinedPoints = points;
         this.boardDefinedConnections = connections;
+
+        populations = new ArrayList<>();
     }
 
     public PCB(){
         boardDefinedPoints = new ArrayList<>();
         boardDefinedConnections = new ArrayList<>();
+        populations = new ArrayList<>();
     }
 
-    //OPERATORS
     private Population initPopulation(){
         Population boardSolutionsPopulation = new Population(AlgorithmConfiguration.populationSize);
         boardSolutionsPopulation.randomInitPopulation(this);
         return boardSolutionsPopulation;
+    }
+
+    public Individual findSolution(){
+        populations.clear();
+        Population initial = initPopulation();
+        populations.add(initial);
+
+        for(int i = 0; i < AlgorithmConfiguration.numberOfPopulations; i++){
+            Population nextPopulation = new Population(AlgorithmConfiguration.populationSize);
+            int counter = 0;
+            while(counter != AlgorithmConfiguration.populationSize){
+                Individual firstParent = GeneticOperators.selectionOperatorTournament(populations.get(populations.size()-1));
+                Individual secondParent = GeneticOperators.selectionOperatorTournament(populations.get(populations.size()-1));
+                while(firstParent == secondParent){
+                    secondParent = GeneticOperators.selectionOperatorTournament(populations.get(populations.size()-1));
+                }
+                nextPopulation.getIndividualsInPopulation()[counter] = GeneticOperators.crossing(firstParent, secondParent);
+                counter ++;
+            }
+            nextPopulation.setFitnessForAllSolutions();
+            populations.add(nextPopulation);
+        }
+        Arrays.sort(populations.get(populations.size()-1).getIndividualsInPopulation(), Individual::compareTo);
+        return (populations.get(populations.size() -1).getIndividualsInPopulation())[AlgorithmConfiguration.populationSize - 1];
     }
 
 
@@ -172,13 +198,16 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
 
         System.out.println("========================================");
 
-        Population pop = pcb.initPopulation();
+        Individual sol = pcb.findSolution();
+
+        System.out.println(sol.toString());
+        //Population pop = pcb.initPopulation();
         //Population pop1 = new Population(AlgorithmConfiguration.populationSize, pcb);
 
         //System.out.println(pop.toString());
         //System.out.println(pop.getFitnessForAllSolutions());
 
-        Individual ind1 = GeneticOperators.selectionOperatorTournament(pop);
+        /*Individual ind1 = GeneticOperators.selectionOperatorTournament(pop);
         Individual ind2 = GeneticOperators.selectionOperatorTournament(pop);
 
         System.out.println(ind1.toString());
@@ -187,6 +216,6 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
         if(ind1 != ind2){
             Individual result = GeneticOperators.crossing(ind1, ind2);
             System.out.println(result.toString());
-        }
+        }*/
     }
 }
