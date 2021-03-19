@@ -150,8 +150,10 @@ public class Path {
     ArrayList<Point> getAllPointsOnPath(){
         ArrayList<Point> result = new ArrayList<>(); //ARRAY LIST OF POINTS ON PATH
         for(Segment segment : segmentsInPath){
-            result.addAll(segment.getListOfPointsOnSegment());
+            for(int i = 0; i < segment.getListOfPointsOnSegment().size()-1; i++)
+                result.add(segment.getListOfPointsOnSegment().get(i));
         }
+        result.add(this.pathEndPoint.deepCopy());
         return result;
     }
 

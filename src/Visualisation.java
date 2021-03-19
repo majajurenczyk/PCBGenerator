@@ -11,10 +11,8 @@ public class Visualisation extends Application {
     private PCB pcb = new PCB();
 
     private Scene drawBoard(){
-        pcb.readAndSetPCBParamsFromFile("C:\\Users\\User\\Desktop\\3rok\\6sem\\SI\\L\\lab1\\PCBGenerator\\src\\zad1.txt");
-
+        pcb.readAndSetPCBParamsFromFile("C:\\Users\\User\\Desktop\\3rok\\6sem\\SI\\L\\lab1\\PCBGenerator\\src\\zad3.txt");
         Group gr = new Group();
-
         for(int i = 0; i <= pcb.getBoardWidth(); i++){
             for(int j = 0; j <= pcb.getBoardHeight(); j++){
                 Line point = new Line(i*50, j*50, i*50, j*50);
@@ -24,11 +22,10 @@ public class Visualisation extends Application {
                 gr.getChildren().add(point);
             }
         }
-
         Individual ind = pcb.findSolution();
         System.out.println(ind.toString());
-
         Color[] colors = new Color[10];
+
         colors[0] = Color.RED;
         colors[1] = Color.BLUEVIOLET;
         colors[2] = Color.CYAN;

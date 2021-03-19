@@ -48,10 +48,10 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
             int counter = 0;
             while(counter != AlgorithmConfiguration.populationSize){
                 Individual firstParent = GeneticOperators.selectionOperatorTournament(actPop);
-                Individual secondParent = GeneticOperators.selectionOperatorRoulette(actPop);
+                Individual secondParent = GeneticOperators.selectionOperatorTournament(actPop);
                 Individual child = GeneticOperators.crossing(firstParent, secondParent);
                 child.setIndividualFitness(child.countIndividualFitness());
-                Individual newChild = GeneticOperators.mutationRand(child, firstParent);
+                child = GeneticOperators.mutation(child, firstParent);
                 nextPopulation.getIndividualsInPopulation()[counter] = child;
                 counter++;
             }

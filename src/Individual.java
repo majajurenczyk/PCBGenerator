@@ -107,7 +107,7 @@ public class Individual implements Comparable {
                 pointsWithoutDuplicates.add(pFromAll);
             }
         }
-        return allPointsFromPaths.size() - pointsWithoutDuplicates.size(); //NUMBER OF INTERSECTS IS NUMBER OF DUPLICATES IN ALL POINTS
+        return allPointsFromPaths.size() - pointsWithoutDuplicates.size() + 1; //NUMBER OF INTERSECTS IS NUMBER OF DUPLICATES IN ALL POINTS
     }
 
     //GETTERS AND SETTERS
