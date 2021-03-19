@@ -5,11 +5,11 @@ import java.util.Random;
 
 public class Population {
     private Individual [] individualsInPopulation;
-    private int [] fitnessInPopulation;
+    private double [] fitnessInPopulation;
 
     Population(int populationSize){ //Population is an array of list of individuals which are solutions
         individualsInPopulation = new Individual[populationSize];
-        fitnessInPopulation = new int[populationSize];
+        fitnessInPopulation = new double [populationSize];
     }
 
     void randomInitPopulation(PCB problem){
@@ -18,6 +18,12 @@ public class Population {
             individualsInPopulation[i].randomInitIndividual();
         }
         setFitnessForAllSolutions(); //after generating population is counted fitness in population for each individual.
+    }
+
+    public void showIndividualsPunishments(){
+        for (Individual i: individualsInPopulation) {
+            System.out.print(i.getIndividualFitness()+ "  ");
+        }
     }
 
     public int getIndexOfIndividual(Individual ind){
@@ -33,14 +39,14 @@ public class Population {
         for (Individual i: individualsInPopulation) {
             punishments.add(i.countIndividualFitness());
         }
-        punishments.sort(Double::compare);
+        punishments.sort(Integer::compare);
 
         for(int i = 0; i < individualsInPopulation.length; i++){
-            fitnessInPopulation[i] = (int)(((double)punishments.get(0)/(double)(individualsInPopulation[i].getIndividualFitness()))*10000);
+            fitnessInPopulation[i] = (((double)punishments.get(0))/(double)(individualsInPopulation[i].getIndividualFitness()));
         }
     }
 
-    public int [] getFitnessForAllSolutions(){
+    public double [] getFitnessForAllSolutions(){
         return fitnessInPopulation;
     }
 

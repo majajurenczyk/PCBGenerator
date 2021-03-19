@@ -1,3 +1,5 @@
+import javafx.stage.Stage;
+
 import java.io.*;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
@@ -39,17 +41,17 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
         populations.add(initial);
 
         Population actPop = initial;
+        System.out.println("punish. before: ");
+        initial.showIndividualsPunishments();
         for(int i = 0; i < AlgorithmConfiguration.numberOfPopulations; i++){
             Population nextPopulation = new Population(AlgorithmConfiguration.populationSize);
             int counter = 0;
             while(counter != AlgorithmConfiguration.populationSize){
                 Individual firstParent = GeneticOperators.selectionOperatorTournament(actPop);
-                Individual secondParent = GeneticOperators.selectionOperatorTournament(actPop);
-                /*while(firstParent == secondParent){
-                    secondParent = GeneticOperators.selectionOperatorTournament(actPop);
-                }*/
+                Individual secondParent = GeneticOperators.selectionOperatorRoulette(actPop);
                 Individual child = GeneticOperators.crossing(firstParent, secondParent);
-                child = GeneticOperators.mutationRand(child, firstParent);
+                child.setIndividualFitness(child.countIndividualFitness());
+                Individual newChild = GeneticOperators.mutationRand(child, firstParent);
                 nextPopulation.getIndividualsInPopulation()[counter] = child;
                 counter++;
             }
@@ -57,12 +59,13 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
             actPop = nextPopulation;
         }
         Arrays.sort(actPop.getIndividualsInPopulation(), Individual::compareTo);
+        System.out.println("\nPunish. after: ");
+        actPop.showIndividualsPunishments();
         return (actPop.getIndividualsInPopulation())[AlgorithmConfiguration.populationSize - 1];
     }
 
-
     //METHODS
-    private boolean readAndSetPCBParamsFromFile(String filePath) {
+    boolean readAndSetPCBParamsFromFile(String filePath) {
         if (!isPathValid(filePath))
                 return false;
         try {
@@ -194,9 +197,11 @@ public class PCB { //PCB is problem instance < - > we are trying to find best so
     //===================================================================================================================='
 
 
-    public static void main(String[] args) {
+
+
+    public static void main(String[] args) throws Exception {
         PCB pcb = new PCB();
-        boolean res = pcb.readAndSetPCBParamsFromFile("C:\\Users\\User\\Desktop\\3rok\\6sem\\SI\\L\\lab1\\PCBGenerator\\src\\zad0.txt");
+        boolean res = pcb.readAndSetPCBParamsFromFile("C:\\Users\\User\\Desktop\\3rok\\6sem\\SI\\L\\lab1\\PCBGenerator\\src\\zad1.txt");
         System.out.println(pcb);
 
         System.out.println("========================================");

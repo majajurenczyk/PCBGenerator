@@ -112,8 +112,8 @@ public class Path {
         ArrayList<Integer> distances_sorted = new ArrayList<>();
         int[] probabilities = new int[moves.size()];
         for (Point p : moves) {
-            distances.add((int) (p.countDistanceToAnotherPoint(pathEndPoint) * 1000)); //THE PROBABILITY TO BE CHOSEN IS THE HIGHER THE CLOSER IS ENDPOINT
-            distances_sorted.add((int) (p.countDistanceToAnotherPoint(pathEndPoint) * 1000));
+            distances.add((int) (p.countDistanceToAnotherPoint(pathEndPoint) * 500)); //THE PROBABILITY TO BE CHOSEN IS THE HIGHER THE CLOSER IS ENDPOINT
+            distances_sorted.add((int) (p.countDistanceToAnotherPoint(pathEndPoint) * 500));
         }
         distances_sorted.sort(Collections.reverseOrder());
         for (int i = 0; i < moves.size(); i++) {
@@ -126,7 +126,7 @@ public class Path {
         Random ran = new Random();
         int[] results = new int[probabilities.length];
         for (int i = 0; i < probabilities.length; i++) {
-            results[i] = ran.nextInt(100 * probabilities[i]);
+            results[i] = ran.nextInt(50 * probabilities[i]);
         }
         int max = results[0];
         int max_index = 0;

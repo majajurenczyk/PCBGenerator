@@ -33,6 +33,7 @@ public class Individual implements Comparable {
         for (int i = 0; i < pathsOnBoard.length; i++){
             result.pathsOnBoard[i] = pathsOnBoard[i].deepCopyPath();
         }
+        result.setIndividualFitness(this.individualFitness);
         return result;
     }
 
@@ -114,19 +115,15 @@ public class Individual implements Comparable {
         return pathsOnBoard;
     }
 
-    public void setPathsOnBoard(Path[] pathsOnBoard) {
-        this.pathsOnBoard = pathsOnBoard;
-    }
-
     //OVERRIDE FROM OBJECT
-    @Override
-    public String toString() {
+    //@Override
+    /*public String toString() {
         StringBuilder result = new StringBuilder("\nINDIVIDUAL: ");
         for (Path p: pathsOnBoard) {
             result.append("\t").append(p.toString()).append("\n");
         }
         return result.toString();
-    }
+    }*/
 
 
     @Override

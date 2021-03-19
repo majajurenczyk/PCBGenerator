@@ -60,7 +60,6 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
         }
     }
 
-
     int getSegmentLength(){ //LENGTH BETWEEN END POINT AND START POINT
         if(segmentOrientationData == Direction.NO_DIRECTION){
             return 0;

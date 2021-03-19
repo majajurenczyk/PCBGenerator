@@ -23,7 +23,7 @@ public class GeneticOperators {
                 counter++;
             }
         }
-        drawnIndividuals.sort(Comparator.comparingInt((Individual i) -> population.getFitnessForAllSolutions()[population.getIndexOfIndividual(i)]));
+        drawnIndividuals.sort(Comparator.comparingDouble((Individual i) -> population.getFitnessForAllSolutions()[population.getIndexOfIndividual(i)]));
         return drawnIndividuals.get(drawnIndividuals.size() - 1);
     }
 
@@ -31,28 +31,29 @@ public class GeneticOperators {
     public static Individual selectionOperatorRoulette(Population population) {
         Random rand = new Random();
         double[] weights = countPropsOfBeingDrawn(population.getFitnessForAllSolutions());
-        double randomValue = ((double) rand.nextInt(100)) / 100;
+        double randomValue = ((double) rand.nextInt(50)) / 50;
         int resultIndex = -1;
         double previousSum = 0;
         for (int i = 0; i < weights.length; i++) {
             previousSum = 0;
             for (int j = 0; j < i; j++) {
-                System.out.println(weights[j]);
+                //System.out.println(weights[j]);
                 previousSum = previousSum + weights[j];
             }
             if (randomValue >= previousSum && randomValue < previousSum + weights[i])
                 resultIndex = i;
         }
         if (resultIndex != -1) {
+            System.out.println("HEJ");
             return population.getIndividualsInPopulation()[resultIndex];
         } else
             return null;
     }
 
 
-    private static double[] countPropsOfBeingDrawn(int[] fitValues) {
-        ArrayList<Integer> fitnessValues = new ArrayList<>();
-        for (int i : fitValues) fitnessValues.add(i);
+    private static double[] countPropsOfBeingDrawn(double[] fitValues) {
+        ArrayList<Double> fitnessValues = new ArrayList<>();
+        for (double i : fitValues) fitnessValues.add(i);
 
         double[] weights = new double[fitnessValues.size()];
         double sum = fitnessValues.stream()
@@ -100,12 +101,15 @@ public class GeneticOperators {
         else
             childToMutate = child;
 
-        int pathToMutateIndex = rand.nextInt(childToMutate.getPathsOnBoard().length);
-        Path pathToMutate = childToMutate.getPathsOnBoard()[pathToMutateIndex];
-        ArrayList<Segment> newSegments = new ArrayList<>();
-        Path newPath = new Path(pathToMutate.getPathStartPoint(), pathToMutate.getPathEndPoint(), newSegments);
-        newPath.randomInitPath();
-        child.getPathsOnBoard()[pathToMutateIndex] = newPath;
+        int mutProb = rand.nextInt(101);
+        if(mutProb <= AlgorithmConfiguration.mutationProbability) {
+            int pathToMutateIndex = rand.nextInt(childToMutate.getPathsOnBoard().length);
+            Path pathToMutate = childToMutate.getPathsOnBoard()[pathToMutateIndex];
+            ArrayList<Segment> newSegments = new ArrayList<>();
+            Path newPath = new Path(pathToMutate.getPathStartPoint(), pathToMutate.getPathEndPoint(), newSegments);
+            newPath.randomInitPath();
+            child.getPathsOnBoard()[pathToMutateIndex] = newPath;
+        }
         return childToMutate;
     }
 
