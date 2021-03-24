@@ -45,6 +45,16 @@ public class Individual implements Comparable {
                 AlgorithmConfiguration.punishmentForIntersects*getAllIntersects();
     }
 
+    public int countIndividualFitnessStep(int intersectsPunish){
+        return AlgorithmConfiguration.punishmentForPathsLength*getAllPathsLength() +
+                AlgorithmConfiguration.punishmentForNumberOfSegments*getAllPathsNumberOfSegments() +
+                AlgorithmConfiguration.punishmentForNumberOfPathsOutOfBoard*getNumberOfPathsOutOfBoard(problem) +
+                AlgorithmConfiguration.punishmentForPathsLengthOutOfBoard*getAllPathsOutOfBoardLength(problem) +
+                AlgorithmConfiguration.punishmentForIntersects*getAllIntersects()+
+                intersectsPunish;
+    }
+
+
     public void setIndividualFitness(int individualFitness){
         this.individualFitness = individualFitness;
     }
@@ -107,7 +117,30 @@ public class Individual implements Comparable {
                 pointsWithoutDuplicates.add(pFromAll);
             }
         }
-        return allPointsFromPaths.size() - pointsWithoutDuplicates.size() + 1; //NUMBER OF INTERSECTS IS NUMBER OF DUPLICATES IN ALL POINTS
+        return allPointsFromPaths.size() - pointsWithoutDuplicates.size(); //NUMBER OF INTERSECTS IS NUMBER OF DUPLICATES IN ALL POINTS
+    }
+
+    public boolean [] getAllIntersectsPaths(){
+        boolean [] intersectPaths = new boolean[pathsOnBoard.length];
+        for(int i = 0; i < pathsOnBoard.length - 1; i++){
+            for(int j = i; j <pathsOnBoard.length; j++){
+                if(pathsOnBoard[i].ifIntersects(pathsOnBoard[j])){
+                    intersectPaths[i] = true;
+                    intersectPaths[j] = true;
+                }
+            }
+        }
+        return intersectPaths;
+    }
+
+    public ArrayList<Point> intersectPoints(){
+        ArrayList<Point> intersects = new ArrayList<>();
+        for(int i = 0; i < pathsOnBoard.length - 1; i++) {
+            for (int j = i; j < pathsOnBoard.length; j++) {
+                intersects.addAll(pathsOnBoard[i].intersectingPoints(pathsOnBoard[j]));
+            }
+        }
+        return intersects;
     }
 
     //GETTERS AND SETTERS
@@ -116,14 +149,14 @@ public class Individual implements Comparable {
     }
 
     //OVERRIDE FROM OBJECT
-    //@Override
-    /*public String toString() {
+    @Override
+    public String toString() {
         StringBuilder result = new StringBuilder("\nINDIVIDUAL: ");
         for (Path p: pathsOnBoard) {
             result.append("\t").append(p.toString()).append("\n");
         }
         return result.toString();
-    }*/
+    }
 
 
     @Override

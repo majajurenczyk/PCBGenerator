@@ -53,7 +53,7 @@ public class Path {
 
     private void firstMoveInPath() {
         Random rand = new Random();
-        Segment actInitSegment = new Segment(pathStartPoint, this);
+        Segment actInitSegment = new Segment(pathStartPoint);
         ArrayList<Point> availableMoves = getAllPointsToMoveFromPoint(pathStartPoint, null);
         Point randomMove = availableMoves.get(rand.nextInt(availableMoves.size())); //FIRST MOVE IS FULL RANDOM
         actInitSegment.initSegmentEndPoint(randomMove);
@@ -73,14 +73,14 @@ public class Path {
                 int[] moves_probabilities = getProbabilitiesForMoves(actAvailableMoves); //PROBABILITIES TO MAKE SPECIFIC MOVE, THE BIGGER THE CLOSER TO ENDPOINT
                 Point actRandomMove = actAvailableMoves.get(chooseMoveIndex(moves_probabilities)); //GET MOVE WITH THE HIGHEST PROBABILITY
                 if (actSegment.ifPointCanBeNewPartOfSegment(actRandomMove)) { //IF NEW MOVE CAN BY PART OF SEGMENT
-                    Segment actNewSegment = new Segment(actSegment.getSegmentStartPoint(), this);
+                    Segment actNewSegment = new Segment(actSegment.getSegmentStartPoint());
                     actNewSegment.initSegmentEndPoint(actRandomMove); //OLD START POINT AND NEW ENDPOINT OF LAST SEGMENT
 
                     segmentsInPath.remove(actSegment);
                     segmentsInPath.add(actNewSegment);
                 }
                 else {
-                    Segment actNewSegment = new Segment(actSegment.getSegmentEndPoint(), this); //NEW SEGMENT
+                    Segment actNewSegment = new Segment(actSegment.getSegmentEndPoint()); //NEW SEGMENT
                     actNewSegment.initSegmentEndPoint(actRandomMove);
                     segmentsInPath.add(actNewSegment);
                 }
@@ -155,6 +155,29 @@ public class Path {
         }
         result.add(this.pathEndPoint.deepCopy());
         return result;
+    }
+
+    public boolean ifIntersects(Path p){
+        for (int i = 0; i < this.getSegmentsInPath().size() - 1; i++) {
+            for (int j = i; j < p.getSegmentsInPath().size(); j++) {
+                if(this.getSegmentsInPath().get(i).equals(p.getSegmentsInPath().get(j))){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<Point> intersectingPoints(Path p){
+        ArrayList<Point> intersections = new ArrayList<>();
+        for (int i = 0; i < this.getAllPointsOnPath().size(); i++) {
+            for (int j = 0; j < p.getSegmentsInPath().size(); j++) {
+                if(this.getAllPointsOnPath().get(i).equals(p.getAllPointsOnPath().get(j))){
+                    intersections.add(this.getAllPointsOnPath().get(0).deepCopy());
+                }
+            }
+        }
+        return intersections;
     }
 
     //GETTERS AND SETTERS

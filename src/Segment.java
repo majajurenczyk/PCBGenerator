@@ -6,12 +6,12 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
 
     private int segmentOrientationData = Direction.NO_DIRECTION; //ORIENTATION, DIRECTION
 
-    public Segment(Point start, Path segmentsPath){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
+    public Segment(Point start){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
         segmentStartPoint = start.deepCopy();
         segmentEndPoint = start.deepCopy();
     }
 
-    public Segment(Point start, Point end, int orientation /*, Path segmentsPath*/){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
+    public Segment(Point start, Point end, int orientation){ //SEGMENT IS A POINT AT THE BEGINNING, INITIAL MOVE DEFINES ORIENTATION DATA
         segmentStartPoint = start.deepCopy();
         segmentEndPoint = end.deepCopy();
         segmentOrientationData = orientation;
@@ -61,9 +61,6 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
     }
 
     int getSegmentLength(){ //LENGTH BETWEEN END POINT AND START POINT
-        if(segmentOrientationData == Direction.NO_DIRECTION){
-            return 0;
-        }
         return (int)segmentStartPoint.countDistanceToAnotherPoint(segmentEndPoint);
     }
 
@@ -99,7 +96,10 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
             }
         }
 
-        return getSegmentLength() - (numberOfPointsOnBoard-1);
+        if(numberOfPointsOnBoard == 0 || numberOfPointsOnBoard == 1)
+            return getSegmentLength();
+        else
+            return getSegmentLength() - (numberOfPointsOnBoard-1);
     }
 
 
@@ -154,6 +154,30 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
         return result;
     }
 
+    public boolean ifIntersects(Segment s){
+        for(int i = 0; i < this.getListOfPointsOnSegment().size()-1; i++){
+            for(int j = i; j < s.getListOfPointsOnSegment().size(); j++){
+                if(this.getListOfPointsOnSegment().get(i).equals(s.getListOfPointsOnSegment().get(j))){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<Point> intersectsPoint(Segment s){
+        ArrayList<Point> intersectingPoints = new ArrayList<>();
+
+        for(int i = 0; i <this.getListOfPointsOnSegment().size() - 1; i++){
+            for(int j = i; j < s.getListOfPointsOnSegment().size(); j++){
+                if(this.getListOfPointsOnSegment().get(i).equals(s.getListOfPointsOnSegment().get(j))){
+                    intersectingPoints.add(this.getListOfPointsOnSegment().get(i).deepCopy());
+                }
+            }
+        }
+        return intersectingPoints;
+    }
+
     //GETTERS AND SETTERS
 
     Point getSegmentEndPoint() {
@@ -176,7 +200,6 @@ public class Segment { //FOR THIS MOMENT SEGMENTS CAN BE OUT OF BOARD ETC
     }
 
     //FROM OBJECT
-
 
     @Override
     public String toString() {
